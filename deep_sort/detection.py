@@ -47,3 +47,24 @@ class Detection(object):
         ret[:2] += ret[2:] / 2
         ret[2] /= ret[3]
         return ret
+    
+    @property
+    def dict(self):
+        tlbr = self.to_tlbr()
+        l,t,r,b = [float(f'{n:.6f}') for n in tlbr]
+        return dict(xmin=l, xmax=r, ymin=t, ymax=b, label='r', conf=1)
+    
+    @classmethod
+    def from_dict(cls, obj_dict):
+        tlwh = (obj_dict['xmin'],
+                obj_dict['ymin'],
+                obj_dict['xmax'] - obj_dict['xmin'],
+                obj_dict['ymax'] - obj_dict['ymin'])
+        
+        return cls(tlwh, obj_dict['conf'], feature=None)
+    
+    @classmethod
+    def from_tlbr(cls, tlbr):
+        h = tlbr[2] - tlbr[0]
+        w = tlbr[3] - tlbr[1]
+        return cls([tlbr[1], tlbr[0], w, h], 1, None)

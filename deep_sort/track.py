@@ -1,5 +1,6 @@
 # vim: expandtab:ts=4:sw=4
-
+import numpy as np
+from . import Detection
 
 class TrackState:
     """
@@ -79,6 +80,12 @@ class Track:
 
         self._n_init = n_init
         self._max_age = max_age
+        self.box
+
+    @property
+    def box(self):
+        t,l,w,h = self.to_tlwh()
+        return Detection([t,l,w,h], 1, None)
 
     def to_tlwh(self):
         """Get current position in bounding box format `(top left x, top left y,
